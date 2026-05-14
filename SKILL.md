@@ -1,5 +1,5 @@
 ---
-name: cancerdao-clinical-trial-matching
+name: clinical-trial-matching
 description: "当癌症患者（特别是中国患者）需要匹配临床试验时使用——输入癌症类型、基因突变、治疗史，系统自动从 ClinicalTrials.gov + ChiCTR 双源检索正在招募的试验，输出符合入排标准的试验列表（含医院地址、联系电话、入组要求）。触发词：临床试验、匹配试验、找临床试验、临床入组、NCT、ChiCTR、临床试验匹配。禁止在没有真实 NCT/ChiCTR ID 时编造试验编号。"
 license: MIT
 metadata:
@@ -37,7 +37,6 @@ End-to-end oncology clinical trial matching that generates decision-grade report
 ### Step 1 — 患者信息提取
 
 从用户输入中提取结构化患者档案，必填字段：
-
 ```json
 {
   "cancer_type": "NSCLC | CRC | PDAC | breast | gastric | ...",
@@ -55,7 +54,6 @@ End-to-end oncology clinical trial matching that generates decision-grade report
 
 
 创建 8 个搜索维度（参考：`references/trialgpt-methodology.md`）：
-
 1. **疾病+突变特异** — e.g. `NSCLC EGFR T790M`
 2. **泛实体瘤** — e.g. `solid tumor KRAS G12C` (basket trials)
 3. **联合靶点** — e.g. `KRAS G12C cetuximab`
@@ -91,12 +89,16 @@ mcp__chictr__search_trials(keyword="胰腺癌 BRCA", max_results=20)
 
 ### Step 5 — 逐试验 eligibility 分析
 
+
 对每个候选试验评估：
 1. **入排标准匹配** — 逐条 vs 患者档案
 2. **风险注释** — 关键耐药机制（EGFR TKI 耐药：C797S 顺式/反式突变、MET 扩增、KRAS G12C 耐药：继发 RAS/MAPK 通路激活；详见 references/egfr-tki-resistance.md）
 3. **疗效上下文** — 试验疗效 + vs 标准治疗
 
+
 ### Step 6 — 决策合成
+
+
 
 输出：
 - Top-N 匹配路径（按可行性 + 多样性，不按"推荐"排名）
@@ -105,6 +107,7 @@ mcp__chictr__search_trials(keyword="胰腺癌 BRCA", max_results=20)
 - Goals-of-Care 触发（3rd+ 线或预测 OS <12 个月时，提示缓和护理选项）
 
 ### Step 7 — HTML 报告
+
 
 生成自包含 HTML 报告（优先路径：`~/Downloads/临床试验匹配报告_{date}.html`；若 Downloads 不可写则输出到当前工作目录）。报告须包含完整 disclaimer，无外部资源依赖。
 
@@ -133,6 +136,7 @@ mcp__chictr__search_trials(keyword="胰腺癌 BRCA", max_results=20)
 
 ## References
 
+
 - `references/trialgpt-methodology.md` — 8 维搜索策略 + BM25+MedCPT 检索
 - `references/chictr-search-guide.md` — ChiCTR MCP 使用 + 注册号格式
 - `references/oncology-db-mcp-api.md` — oncology-db MCP 工具覆盖范围
@@ -142,7 +146,7 @@ mcp__chictr__search_trials(keyword="胰腺癌 BRCA", max_results=20)
 ## File map
 
 ```
-cancerdao-clinical-trial-matching/
+clinical-trial-matching/
 ├── SKILL.md
 ├── README.md
 ├── evals/
