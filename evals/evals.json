@@ -1,0 +1,36 @@
+{
+  "skill_name": "clinical-trial-matching",
+  "evals": [
+    {
+      "id": "eval-1",
+      "name": "NSCLC EGFR patient trial matching",
+      "prompt": "我爸爸刚确诊肺腺癌四期，EGFR突变，用过奥希替尼，现在耐药了。想找临床试验。",
+      "expected_output": "Output mentions trial IDs (NCT or ChiCTR), eligibility assessment, hospital locations, and contact info.",
+      "assertions": [
+        "Output mentions at least one clinical trial ID",
+        "Output mentions specific eligibility criteria",
+        "Output includes hospital/institution name"
+      ]
+    },
+    {
+      "id": "eval-2",
+      "name": "CRC KRAS G12C patient trial matching",
+      "prompt": "结肠癌，KRAS G12C突变，二线治疗后进展，想找临床试验",
+      "expected_output": "Output identifies KRAS G12C specific trials with eligibility criteria.",
+      "assertions": [
+        "Output mentions KRAS G12C specific trial",
+        "Output mentions inclusion/exclusion criteria"
+      ]
+    },
+    {
+      "id": "eval-3",
+      "name": "ChiCTR trial search in Chinese",
+      "prompt": "我想找ChiCTR注册的临床试验，胰腺癌，BRCA突变",
+      "expected_output": "Output returns ChiCTR registration number and Chinese hospital info.",
+      "assertions": [
+        "Output mentions ChiCTR registration number",
+        "Output mentions Chinese hospital or institution"
+      ]
+    }
+  ]
+}

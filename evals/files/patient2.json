@@ -1,0 +1,71 @@
+{
+  "patient_id": "PT-CRC-KRASG12C-001",
+  "cancer_type": "CRC",
+  "histology": "结肠腺癌",
+  "stage": "IV",
+  "disease_stage": "metastatic",
+  "metastasis_sites": ["肝", "肺"],
+  "mutations": [
+    {
+      "gene": "KRAS",
+      "variant": "G12C",
+      "notes": "exon 2"
+    },
+    {
+      "gene": "APC",
+      "variant": "mutated",
+      "notes": "体系突变"
+    },
+    {
+      "gene": "TP53",
+      "variant": "mutated",
+      "notes": "体系突变"
+    }
+  ],
+  "biomarkers_known": {
+    "MSI": "MSS",
+    "TMB": 3.8,
+    "BRAF": "wild-type",
+    "HER2": "0"
+  },
+  "treatment_lines_completed": 2,
+  "treatment_history": [
+    {
+      "line": 1,
+      "regimen": "FOLFOX + 贝伐单抗",
+      "duration_months": 6,
+      "outcome": "PD",
+      "best_response": "SD"
+    },
+    {
+      "line": 2,
+      "regimen": "FOLFIRI + 贝伐单抗",
+      "duration_months": 5,
+      "outcome": "PD",
+      "best_response": "PD",
+      "progression_type": "原发耐药"
+    }
+  ],
+  "current_therapy_ongoing": false,
+  "prior_therapies": [
+    "FOLFOX",
+    "贝伐单抗",
+    "FOLFIRI"
+  ],
+  "ecog": 1,
+  "kps": 75,
+  "comorbidities": ["2型糖尿病 (口服降糖药控制)"],
+  "organ_function": "normal",
+  "age": 54,
+  "sex": "M",
+  "country": "China",
+  "patient_location": "江苏南京",
+  "willing_to_travel_domestic": true,
+  "willing_to_travel_internationally": false,
+  "affordability_tier": "medium",
+  "primary_contact": {
+    "name": "患者本人",
+    "relationship": "本人",
+    "phone": "139xxxxxxx"
+  }
+}

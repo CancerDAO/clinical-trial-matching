@@ -1,0 +1,63 @@
+{
+  "patient_id": "PT-NSCLC-EGFR-001",
+  "cancer_type": "NSCLC",
+  "histology": "肺腺癌",
+  "stage": "IV",
+  "disease_stage": "metastatic",
+  "metastasis_sites": ["肺", "骨", "脑"],
+  "mutations": [
+    {
+      "gene": "EGFR",
+      "variant": "L858R",
+      "notes": "exon 21"
+    },
+    {
+      "gene": "EGFR",
+      "variant": "T790M",
+      "notes": "获得性耐药突变"
+    }
+  ],
+  "biomarkers_known": {
+    "MSI": "MSS",
+    "TMB": 5.2
+  },
+  "treatment_lines_completed": 2,
+  "treatment_history": [
+    {
+      "line": 1,
+      "regimen": "吉非替尼 (gefitinib)",
+      "duration_months": 14,
+      "outcome": "PR",
+      "best_response": "PR"
+    },
+    {
+      "line": 2,
+      "regimen": "奥希替尼 (osimertinib)",
+      "duration_months": 11,
+      "outcome": "PD",
+      "best_response": "SD",
+      "progression_type": "获得性耐药"
+    }
+  ],
+  "current_therapy_ongoing": false,
+  "prior_therapies": [
+    "吉非替尼",
+    "奥希替尼"
+  ],
+  "ecog": 1,
+  "kps": 80,
+  "comorbidities": ["高血压 (控制良好)"],
+  "organ_function": "normal",
+  "age": 62,
+  "sex": "M",
+  "country": "China",
+  "patient_location": "浙江杭州",
+  "willing_to_travel_domestic": true,
+  "willing_to_travel_internationally": false,
+  "affordability_tier": "medium",
+  "primary_contact": {
+    "name": "患者家属",
+    "relationship": "儿子",
+    "phone": "138xxxxxxx"
+  }
+}
