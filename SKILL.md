@@ -26,7 +26,13 @@ End-to-end oncology clinical trial matching that generates decision-grade report
 
 **禁止**：在无法验证真实招募状态时编造 NCT/ChiCTR 编号。
 
+**ChiCTR 查无结果时**：若 `mcp__chictr__search_trials` 返回空，按以下顺序回退：
+1. 换用单 token 简化关键词重试（如"胰腺癌"→"BRCA"）
+2. 回退到 ClinicalTrials.gov（用 `mcp__oncology_db__search_trials`）并附加中文适应症描述
+3. 终级方案：用 WebSearch 搜索 `site:chictr.org.cn [疾病] [突变]` 并验证注册号格式（ChiCTR-XXX-XXXXXX）
+
 ## Workflow
+
 
 ### Step 1 — 患者信息提取
 
@@ -47,6 +53,7 @@ End-to-end oncology clinical trial matching that generates decision-grade report
 
 ### Step 2 — 生成 8 维搜索计划
 
+
 创建 8 个搜索维度（参考：`references/trialgpt-methodology.md`）：
 
 1. **疾病+突变特异** — e.g. `NSCLC EGFR T790M`
@@ -60,6 +67,7 @@ End-to-end oncology clinical trial matching that generates decision-grade report
 
 ### Step 3 — 双源检索
 
+
 **ClinicalTrials.gov** — 通过 `mcp__oncology_db__search_trials`：
 ```python
 mcp__oncology_db__search_trials(query="KRAS G12C NSCLC", status="RECRUITING")
@@ -68,11 +76,13 @@ mcp__oncology_db__search_trials(query="KRAS G12C NSCLC", status="RECRUITING")
 **ChiCTR** — 通过 `mcp__chictr__search_trials`：
 ```python
 mcp__chictr__search_trials(keyword="结直肠癌 KRAS G12C", max_results=20)
+mcp__chictr__search_trials(keyword="胰腺癌 BRCA", max_results=20)
 ```
 
 详见：`references/chictr-search-guide.md`
 
 ### Step 4 — 验证招募状态 + 可行性评分
+
 
 对每个候选试验：
 - 验证 NCT ID 真实性（绝不虚构）
@@ -83,7 +93,7 @@ mcp__chictr__search_trials(keyword="结直肠癌 KRAS G12C", max_results=20)
 
 对每个候选试验评估：
 1. **入排标准匹配** — 逐条 vs 患者档案
-2. **风险注释** — 机制 × 癌种 × 患者风险（参考：`references/egfr-tki-resistance.md`、`references/kras-g12c-landscape.md`）
+2. **风险注释** — 关键耐药机制（EGFR TKI 耐药：C797S 顺式/反式突变、MET 扩增、KRAS G12C 耐药：继发 RAS/MAPK 通路激活；详见 references/egfr-tki-resistance.md）
 3. **疗效上下文** — 试验疗效 + vs 标准治疗
 
 ### Step 6 — 决策合成
@@ -92,11 +102,11 @@ mcp__chictr__search_trials(keyword="结直肠癌 KRAS G12C", max_results=20)
 - Top-N 匹配路径（按可行性 + 多样性，不按"推荐"排名）
 - 每试验"匹配理由"（禁止数值评分）
 - 自助联系信息（研究者/中心信息，供患者自行联系）
-- Goals-of-Care 触发（3rd+ 线或预测 OS 低于阈值时）
+- Goals-of-Care 触发（3rd+ 线或预测 OS <12 个月时，提示缓和护理选项）
 
 ### Step 7 — HTML 报告
 
-生成自包含 HTML 报告至 `~/Downloads/临床试验匹配报告_{date}.html`（无外部资源）。
+生成自包含 HTML 报告（优先路径：`~/Downloads/临床试验匹配报告_{date}.html`；若 Downloads 不可写则输出到当前工作目录）。报告须包含完整 disclaimer，无外部资源依赖。
 
 ## 合规规则
 
@@ -121,6 +131,14 @@ mcp__chictr__search_trials(keyword="结直肠癌 KRAS G12C", max_results=20)
 | 忽略耐药机制 | 查阅 `references/egfr-tki-resistance.md` 或 `references/kras-g12c-landscape.md` |
 | ChiCTR 复合查询 | 用单 token 分别查询，再合并（分词器脆弱） |
 
+## References
+
+- `references/trialgpt-methodology.md` — 8 维搜索策略 + BM25+MedCPT 检索
+- `references/chictr-search-guide.md` — ChiCTR MCP 使用 + 注册号格式
+- `references/oncology-db-mcp-api.md` — oncology-db MCP 工具覆盖范围
+- `references/egfr-tki-resistance.md` — EGFR TKI 耐药机制（C797S/MET amp 等）
+- `references/kras-g12c-landscape.md` — KRAS G12C 试验 landscape
+
 ## File map
 
 ```
@@ -139,11 +157,3 @@ cancerdao-clinical-trial-matching/
     ├── egfr-tki-resistance.md
     └── kras-g12c-landscape.md
 ```
-
-## References
-
-- `references/trialgpt-methodology.md` — 8 维搜索策略 + BM25+MedCPT 检索
-- `references/chictr-search-guide.md` — ChiCTR MCP 使用 + 注册号格式
-- `references/oncology-db-mcp-api.md` — oncology-db MCP 工具覆盖范围
-- `references/egfr-tki-resistance.md` — EGFR TKI 耐药机制（C797S/MET amp 等）
-- `references/kras-g12c-landscape.md` — KRAS G12C 试验 landscape
